@@ -1,0 +1,21 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: url-shortners
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20
+      - key: MONGO_URI
+        sync: false
+      - key: BASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://links.elvatech.in,https://notify.elvatech.in,http://localhost:5173
+      - key: SHORT_CODE_LENGTH
+        value: 6

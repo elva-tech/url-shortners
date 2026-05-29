@@ -1,11 +1,7 @@
 /**
  * ELVA Links Service - entry point
  *
- * Deployment (EC2 / VPS / Render):
- * 1. Copy .env.example -> .env and set MONGO_URI, BASE_URL, CORS_ORIGIN
- * 2. npm install --production
- * 3. pm2 start ecosystem.config.js --env production
- * 4. Configure NGINX reverse proxy + SSL (see docs/DEPLOYMENT.md)
+ * Render: set env vars in Dashboard → Environment (see render.yaml / docs/DEPLOYMENT.md)
  */
 const config = require('./config');
 const connectDB = require('./config/db');
@@ -14,12 +10,21 @@ const logger = require('./utils/logger');
 
 let server;
 
+const logStartupCheck = () => {
+  console.log('Startup environment check:');
+  console.log(`  NODE_ENV  : ${config.nodeEnv}`);
+  console.log(`  PORT      : ${config.port}`);
+  console.log(`  MONGO_URI : ${config.mongoUri ? 'set' : 'MISSING'}`);
+  console.log(`  BASE_URL  : ${config.baseUrl}`);
+};
+
 const startServer = async () => {
+  logStartupCheck();
   await connectDB();
 
   const app = createApp();
 
-  server = app.listen(config.port, () => {
+  server = app.listen(config.port, '0.0.0.0', () => {
     console.log('========================================');
     console.log('ELVA Links Service');
     console.log(`Environment : ${config.nodeEnv}`);
@@ -50,6 +55,7 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('unhandledRejection', (reason) => {
   logger.error(`Unhandled rejection: ${reason}`);
+  process.exit(1);
 });
 process.on('uncaughtException', (error) => {
   logger.error(`Uncaught exception: ${error.message}`);
@@ -57,6 +63,6 @@ process.on('uncaughtException', (error) => {
 });
 
 startServer().catch((error) => {
-  logger.error(`Server startup failed: ${error.message}`);
+  console.error('Server startup failed:', error.message);
   process.exit(1);
 });
