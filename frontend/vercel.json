@@ -5,6 +5,10 @@
       "destination": "https://url-shortners-m3xw.onrender.com/api/:path*"
     },
     {
+      "source": "/:dltHeader([A-Z]{6})/:shortCode([a-z0-9]{6})",
+      "destination": "https://url-shortners-m3xw.onrender.com/:dltHeader/:shortCode"
+    },
+    {
       "source": "/:shortCode([a-z0-9]{6})",
       "destination": "https://url-shortners-m3xw.onrender.com/:shortCode"
     }

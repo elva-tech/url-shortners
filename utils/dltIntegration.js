@@ -7,14 +7,15 @@
  * 2. Generate short URL (this links-service API)
  *    POST https://links.elvatech.in/api/create
  *    Body: { "originalUrl": "https://maps.google.com/..." }
- *    Response: { "success": true, "shortUrl": "https://links.elvatech.in/abc123" }
+ *    Response: { "success": true, "shortUrl": "https://links.elvatech.in/ELVATK/abc123" }
+ *    (use useDlt: true + dltHeader: "ELVATK" in POST /api/create)
  *
  * 3. Send via Fast2SMS (Jio DLT-approved template)
- *    SMS body uses the short URL only (SMS-friendly, 6-char code path).
- *    Example: "Track your delivery: https://links.elvatech.in/abc123"
+ *    SMS body uses the DLT short URL with registered header path.
+ *    Example: "Track your delivery: https://links.elvatech.in/ELVATK/abc123"
  *
  * 4. User clicks the short link on mobile
- *    GET https://links.elvatech.in/abc123
+ *    GET https://links.elvatech.in/ELVATK/abc123
  *
  * 5. Redirect to original URL
  *    HTTP 302 -> Google Maps / tracking / delivery page

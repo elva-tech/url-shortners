@@ -3,14 +3,27 @@ import { createShortLink } from './api/links';
 import Spinner from './components/Spinner';
 import './App.css';
 
+const DEFAULT_DLT_HEADER = 'ELVATK';
+const DLT_HEADER_REGEX = /^[A-Z]{6}$/;
+
 function App() {
   const [url, setUrl] = useState('');
+  const [useDlt, setUseDlt] = useState(false);
+  const [dltHeader, setDltHeader] = useState(DEFAULT_DLT_HEADER);
   const [shortUrl, setShortUrl] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
   const [isExisting, setIsExisting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const handleDltHeaderChange = (event) => {
+    const lettersOnly = event.target.value
+      .replace(/[^a-zA-Z]/g, '')
+      .toUpperCase()
+      .slice(0, 6);
+    setDltHeader(lettersOnly);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,10 +37,19 @@ function App() {
       return;
     }
 
+    if (useDlt && !DLT_HEADER_REGEX.test(dltHeader)) {
+      setError('DLT header must be exactly 6 letters (A–Z only)');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const data = await createShortLink(url.trim());
+      const data = await createShortLink({
+        originalUrl: url.trim(),
+        useDlt,
+        dltHeader: useDlt ? dltHeader : undefined,
+      });
 
       if (!data.success) {
         throw new Error(data.message || 'Failed to generate short link');
@@ -37,8 +59,8 @@ function App() {
       setIsExisting(Boolean(data.existing));
       setStatusMessage(
         data.existing
-          ? 'Existing short URL found'
-          : 'New short URL created'
+          ? `Existing short URL found${data.dlt ? ' (DLT)' : ''}`
+          : `New short URL created${data.dlt ? ' (DLT)' : ''}`
       );
     } catch (err) {
       setError(err.message || 'Something went wrong');
@@ -58,6 +80,8 @@ function App() {
       setError('Unable to copy to clipboard');
     }
   };
+
+  const previewHeader = dltHeader.length === 6 ? dltHeader : 'XXXXXX';
 
   return (
     <div className="page">
@@ -86,6 +110,37 @@ function App() {
             onChange={(event) => setUrl(event.target.value)}
             disabled={loading}
           />
+
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={useDlt}
+              onChange={(event) => setUseDlt(event.target.checked)}
+              disabled={loading}
+            />
+            <span>Use DLT header for SMS</span>
+          </label>
+
+          {useDlt && (
+            <div className="dlt-header-field">
+              <label htmlFor="dltHeader">DLT header (6 letters)</label>
+              <input
+                id="dltHeader"
+                type="text"
+                placeholder="ELVATK"
+                value={dltHeader}
+                onChange={handleDltHeaderChange}
+                disabled={loading}
+                maxLength={6}
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <p className="dlt-hint">
+                Example:{' '}
+                <code>https://links.elvatech.in/{previewHeader}/abc123</code>
+              </p>
+            </div>
+          )}
 
           <button type="submit" className="primary-btn" disabled={loading}>
             {loading ? (

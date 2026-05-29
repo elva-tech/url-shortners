@@ -13,6 +13,10 @@ export default defineConfig({
         target: backendTarget,
         changeOrigin: true,
       },
+      '^/[A-Z]{6}/[a-z0-9]{6}$': {
+        target: backendTarget,
+        changeOrigin: true,
+      },
       '^/[a-z0-9]{6}$': {
         target: backendTarget,
         changeOrigin: true,

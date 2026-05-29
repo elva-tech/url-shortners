@@ -12,13 +12,20 @@ const linkSchema = new mongoose.Schema(
     originalUrl: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
+    },
+    dltHeader: {
+      type: String,
+      default: null,
+      trim: true,
+      uppercase: true,
     },
   },
   {
     timestamps: true,
   }
 );
+
+linkSchema.index({ originalUrl: 1, dltHeader: 1 }, { unique: true });
 
 module.exports = mongoose.model('Link', linkSchema);

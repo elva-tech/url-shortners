@@ -1,16 +1,19 @@
-/**
- * Uses same-origin /api/create on production (links.elvatech.in).
- * Vercel rewrites proxy to Render backend — never call Render URL from browser.
- */
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
-export const createShortLink = async (originalUrl) => {
+export const createShortLink = async ({ originalUrl, useDlt, dltHeader }) => {
+  const body = { originalUrl };
+
+  if (useDlt) {
+    body.useDlt = true;
+    body.dltHeader = dltHeader;
+  }
+
   const response = await fetch(`${API_BASE}/api/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ originalUrl }),
+    body: JSON.stringify(body),
   });
 
   const data = await response.json().catch(() => ({
