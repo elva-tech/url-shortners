@@ -69,13 +69,31 @@ Optional: set **Node version** to `20` in Render (or use repo `.node-version`).
 
 Point `links.elvatech.in` to Render, then set `BASE_URL=https://links.elvatech.in`.
 
-## 5. Frontend (Vercel)
+## 5. Frontend (Vercel) + branded domain
 
-Deploy `frontend/` separately with:
+**Domain:** `https://links.elvatech.in`  
+**Backend (hidden):** `https://url-shortners-m3xw.onrender.com`
+
+Deploy `frontend/` to Vercel. `frontend/vercel.json` proxies:
+
+| Path | Proxied to Render |
+|------|-------------------|
+| `/api/:path*` | `/api/:path*` |
+| `/:shortCode` (6 chars) | `/:shortCode` |
+
+Users only see `links.elvatech.in`. Set on **Render** (backend):
 
 ```env
-VITE_API_URL=https://links.elvatech.in
+BASE_URL=https://links.elvatech.in
 ```
+
+Frontend env on Vercel (optional — leave empty for same-origin):
+
+```env
+VITE_API_URL=
+```
+
+The React app calls `/api/create`; Vercel forwards to Render. Short links like `https://links.elvatech.in/abc123` proxy to the redirect engine without exposing Render in the browser address bar until the final HTTP redirect.
 
 ## 6. DLT / SMS flow
 

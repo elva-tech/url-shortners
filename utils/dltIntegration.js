@@ -5,7 +5,7 @@
  *    Delivery/notification service prepares a long tracking or Google Maps URL.
  *
  * 2. Generate short URL (this links-service API)
- *    POST https://links.elvatech.in/api/links
+ *    POST https://links.elvatech.in/api/create
  *    Body: { "originalUrl": "https://maps.google.com/..." }
  *    Response: { "success": true, "shortUrl": "https://links.elvatech.in/abc123" }
  *

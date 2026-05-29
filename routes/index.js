@@ -6,7 +6,7 @@ const redirectRoutes = require('./redirect.routes');
 const router = express.Router();
 
 router.use(healthRoutes);
-router.use('/api/links', linkRoutes);
+router.use('/api/create', linkRoutes);
 router.use(redirectRoutes);
 
 module.exports = router;

@@ -1,9 +1,12 @@
+const config = require('../config');
 const Link = require('../models/Link');
 const { isSafeRedirectUrl } = require('../utils/urlValidator');
 const logger = require('../utils/logger');
 
-const SHORT_CODE_PATTERN = /^[a-z0-9]+$/;
-const RESERVED_SHORT_CODES = new Set(['api']);
+const SHORT_CODE_PATTERN = new RegExp(
+  `^[a-z0-9]{${config.shortCodeLength}}$`
+);
+const RESERVED_SHORT_CODES = new Set(['api', 'create']);
 
 const redirectToOriginalUrl = async (req, res, next) => {
   try {

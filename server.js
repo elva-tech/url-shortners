@@ -33,7 +33,7 @@ const startServer = async () => {
     console.log(`Short codes : ${config.shortCodeLength} chars (SMS/DLT)`);
     console.log(`CORS        : ${config.corsOrigins.join(', ')}`);
     console.log(`Health      : ${config.baseUrl}/`);
-    console.log(`API         : ${config.baseUrl}/api/links`);
+    console.log(`API         : ${config.baseUrl}/api/create`);
     console.log('========================================');
   });
 };

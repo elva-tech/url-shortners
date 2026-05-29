@@ -1,7 +1,7 @@
 /**
  * Short link creation API
  *
- * DLT/SMS flow: notify.elvatech.in -> POST /api/links -> Fast2SMS -> user click -> redirect
+ * DLT/SMS flow: notify.elvatech.in -> POST /api/create -> Fast2SMS -> user click -> redirect
  * See utils/dltIntegration.js for full integration notes.
  */
 const { customAlphabet } = require('nanoid');

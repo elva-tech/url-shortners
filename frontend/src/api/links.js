@@ -1,7 +1,11 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+/**
+ * Uses same-origin /api/create on production (links.elvatech.in).
+ * Vercel rewrites proxy to Render backend — never call Render URL from browser.
+ */
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export const createShortLink = async (originalUrl) => {
-  const response = await fetch(`${API_URL}/api/links`, {
+  const response = await fetch(`${API_BASE}/api/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

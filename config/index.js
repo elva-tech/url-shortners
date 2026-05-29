@@ -28,7 +28,7 @@ const config = {
   port: Number.isFinite(parsedPort) && parsedPort > 0 ? parsedPort : 3000,
   nodeEnv,
   mongoUri: process.env.MONGO_URI,
-  baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+  baseUrl: process.env.BASE_URL || 'https://links.elvatech.in',
   corsOrigins: parseCorsOrigins(process.env.CORS_ORIGIN),
   isProduction: nodeEnv === 'production',
   shortCodeLength:
